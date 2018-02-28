@@ -1,31 +1,95 @@
-﻿@{
+﻿@model List<ADTelephones.Models.Telefon>
+@{
     ViewBag.Title = "Home Page";
 }
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="http://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+
+<div class="container">
+    <h2>Książka Telefoniczna</h2>
+    <p>Application is searching contacts by last name, phone number or department</p>
+
+    <!--form search-->
+    <form id="frmsearch" action="~/Home/Index" method="get">
+        <input name="p_text" id="p_text" type="text" value="" data-clear-btn="false">
+        <input id="submit" name="submit" class="btn btn-info" type="submit" style="font-weight:bold;" value="Szukaj" />
+    </form>
+    <br>
+    <!--checking is Model has data-->
+    @if (Model.Count > 0)
+    {
+        <!--if is more than 2 records then we are showing table filter  -->
+        if (Model.Count > 2)
+        {
+            <input class="form-control table-striped" id="myInput" type="text" placeholder="Filtr..">
+            <br>
+        }
+
+          <!--result table  -->
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Imię</th>
+                    <th>Nazwisko</th>
+                    <th>Email</th>
+                    <th>Telefon</th>
+                    <th>Dział</th>
+                    <th>Stanowisko</th>
+                    <th>QRcode</th>
+                </tr>
+            </thead>
+            <tbody id="myTable">
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Imie</td>
+                        <td>@item.Nazwisko</td>
+                        <td>@item.Email</td>
+                        <td>@item.NumerTelefonu</td>
+                        <td>@item.Dzial</td>
+                        <td>@item.Stanowisko</td>
+                        <td>
+                            <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#@item.Email.Replace("@","").Replace(".","")">QRCode</button>
+                        </td>
+                    </tr>
+
+                      <!-- Modal for QRCode -->
+                    <div class="modal navbar-left" id="@item.Email.Replace("@","").Replace(".","")" role="dialog">
+                        <div class="modal-dialog navbar-left">
+
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-header ">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">QRCode for @item.Imie @item.Nazwisko</h4>
+                                </div>
+                                <div class="modal-body ">
+                                    <img src="@item.barcode.ImageUrl" />
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Zamknij</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                }
+
+            </tbody>
+        </table>
+
+    }
 </div>
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-    </div>
-</div>
+<!--searching html table-->
+<script>
+    $(document).ready(function () {
+        $("#myInput").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#myTable tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+</script>
+
+

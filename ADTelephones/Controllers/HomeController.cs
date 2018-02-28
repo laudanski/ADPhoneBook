@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ADTelephones.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,23 +9,15 @@ namespace ADTelephones.Controllers
 {
     public class HomeController : Controller
     {
-        public ActionResult Index()
+        public ActionResult Index(string p_text="")
         {
-            return View();
+            
+            return View(Telefon.GetContacts(p_text.ToString()));
+                        
         }
 
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
+        
 
-            return View();
-        }
 
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
-        }
     }
 }
