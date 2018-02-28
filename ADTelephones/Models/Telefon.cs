@@ -13,8 +13,6 @@ namespace ADTelephones.Models
         public string Imie { get; set; }
         public string Nazwisko { get; set; }
         public string Stanowisko { get; set; }
-
-       
         public string Dzial { get; set; }
         public string Email { get; set; }
         public string NumerTelefonu { get; set; }
